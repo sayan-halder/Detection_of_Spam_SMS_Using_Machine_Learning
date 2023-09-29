@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Detect Spam SMS</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				padding-top: 50px;
+				background-image: linear-gradient(to bottom, #6a8caf, #496d9b);
+			}
+
+			.container {
+				max-width: 500px;
+				background-color: rgba(255, 255, 255, 0.9);
+				padding: 20px;
+				border-radius: 5px;
+				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+				margin: 0 auto;
+			}
+
+			h1 {
+				text-align: center;
+				color: #333;
+				margin-bottom: 30px;
+			}
+
+			textarea {
+				width: 100%;
+				height: 200px;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				padding: 10px;
+				resize: none;
+				font-size: 16px;
+			}
+
+			.btn-check {
+				display: block;
+				margin: 20px auto;
+				padding: 10px 30px;
+				background-color: #4CAF50;
+				color: #fff;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+				font-size: 16px;
+				transition: background-color 0.3s ease;
+				animation: fadeIn 1s ease;
+			}
+
+			.btn-check:hover {
+				background-color: #45a049;
+			}
+
+			.btn-check.loading {
+				background-color: #999;
+				pointer-events: none;
+			}
+
+			.btn-check.loading::after {
+				content: "";
+				display: inline-block;
+				width: 12px;
+				height: 12px;
+				border-radius: 50%;
+				border: 2px solid #fff;
+				border-top-color: transparent;
+				animation: spin 1s linear infinite;
+				margin-left: 5px;
+				vertical-align: middle;
+			}
+
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+				}
+				to {
+					opacity: 1;
+				}
+			}
+
+			@keyframes spin {
+				0% {
+					transform: rotate(0deg);
+				}
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+
+			.alert {
+			margin-top: 20px;
+				padding: 10px;
+				text-align: center;
+				font-weight: bold;
+				border-radius: 5px;
+			}
+
+			.alert-success {
+				color: #155724;
+				background-color: #d4edda;
+				border-color: #c3e6cb;
+			}
+
+			.alert-danger {
+				color: #721c24;
+				background-color: #f8d7da;
+				border-color: #f5c6cb;
+			}
+		</style>
+	</head>
+
+	<body>
+		<form method="GET" action="/spam_or_not_spam_msgs">
+			<div class="container">
+				<h1>Detect Spam SMS</h1>
+
+				<div>
+					<label for="language">Select Language of the SMS:</label>
+					<select id="selectedMenu" name="selectedMenu">
+						<option value="Afrikaans">Afrikaans</option>
+						<option value="Albanian">Albanian</option>
+						<option value="Amharic">Amharic</option>
+						<option value="Arabic">Arabic</option>
+						<option value="Armenian">Armenian</option>
+						<option value="Azerbaijani">Azerbaijani</option>
+						<option value="Basque">Basque</option>
+						<option value="Belarusian">Belarusian</option>
+						<option value="Bengali">Bengali</option>
+						<option value="Bosnian">Bosnian</option>
+						<option value="Bulgarian">Bulgarian</option>
+						<option value="Catalan">Catalan</option>
+						<option value="Cebuano">Cebuano</option>
+						<option value="Chichewa">Chichewa</option>
+						<option value="Chinese (simplified)">Chinese (simplified)</option>
+						<option value="Chinese (traditional)">Chinese (traditional)</option>
+						<option value="Corsican">Corsican</option>
+						<option value="Croatian">Croatian</option>
+						<option value="Czech">Czech</option>
+						<option value="Danish">Danish</option>
+						<option value="Dutch">Dutch</option>
+						<option value="English">English</option>
+						<option value="Esperanto">Esperanto</option>
+						<option value="Estonian">Estonian</option>
+						<option value="Filipino">Filipino</option>
+						<option value="Finnish">Finnish</option>
+						<option value="French">French</option>
+						<option value="Frisian">Frisian</option>
+						<option value="Galician">Galician</option>
+						<option value="Georgian">Georgian</option>
+						<option value="German">German</option>
+						<option value="Greek">Greek</option>
+						<option value="Gujarati">Gujarati</option>
+						<option value="Haitian creole">Haitian creole</option>
+						<option value="Hausa">Hausa</option>
+						<option value="Hawaiian">Hawaiian</option>
+						<option value="Hebrew">Hebrew</option>
+						<option value="Hindi">Hindi</option>
+						<option value="Hmong">Hmong</option>
+						<option value="Hungarian">Hungarian</option>
+						<option value="Icelandic">Icelandic</option>
+						<option value="Igbo">Igbo</option>
+						<option value="Indonesian">Indonesian</option>
+						<option value="Irish">Irish</option>
+						<option value="Italian">Italian</option>
+						<option value="Japanese">Japanese</option>
+						<option value="Javanese">Javanese</option>
+						<option value="Kannada">Kannada</option>
+						<option value="Kazakh">Kazakh</option>
+						<option value="Khmer">Khmer</option>
+						<option value="Korean">Korean</option>
+						<option value="Kurdish (kurmanji)">Kurdish (kurmanji)</option>
+						<option value="Kyrgyz">Kyrgyz</option>
+						<option value="Lao">Lao</option>
+						<option value="Latin">Latin</option>
+						<option value="Latvian">Latvian</option>
+						<option value="Lithuanian">Lithuanian</option>
+						<option value="Luxembourgish">Luxembourgish</option>
+						<option value="Macedonian">Macedonian</option>
+						<option value="Malagasy">Malagasy</option>
+						<option value="Malay">Malay</option>
+						<option value="Malayalam">Malayalam</option>
+						<option value="Maltese">Maltese</option>
+						<option value="Maori">Maori</option>
+						<option value="Marathi">Marathi</option>
+						<option value="Mongolian">Mongolian</option>
+						<option value="Myanmar (burmese)">Myanmar (burmese)</option>
+						<option value="Nepali">Nepali</option>
+						<option value="Norwegian">Norwegian</option>
+						<option value="Odia">Odia</option>
+						<option value="Pashto">Pashto</option>
+						<option value="Persian">Persian</option>
+						<option value="Polish">Polish</option>
+						<option value="Portuguese">Portuguese</option>
+						<option value="Punjabi">Punjabi</option>
+						<option value="Romanian">Romanian</option>
+						<option value="Russian">Russian</option>
+						<option value="Samoan">Samoan</option>
+						<option value="Scots gaelic">Scots gaelic</option>
+						<option value="Serbian">Serbian</option>
+						<option value="Sesotho">Sesotho</option>
+						<option value="Shona">Shona</option>
+						<option value="Sindhi">Sindhi</option>
+						<option value="Sinhala">Sinhala</option>
+						<option value="Slovak">Slovak</option>
+						<option value="Slovenian">Slovenian</option>
+						<option value="Somali">Somali</option>
+						<option value="Spanish">Spanish</option>
+						<option value="Sundanese">Sundanese</option>
+						<option value="Swahili">Swahili</option>
+						<option value="Swedish">Swedish</option>
+						<option value="Tajik">Tajik</option>
+						<option value="Tamil">Tamil</option>
+						<option value="Telugu">Telugu</option>
+						<option value="Thai">Thai</option>
+						<option value="Turkish">Turkish</option>
+						<option value="Ukrainian">Ukrainian</option>
+						<option value="Urdu">Urdu</option>
+						<option value="Uyghur">Uyghur</option>
+						<option value="Uzbek">Uzbek</option>
+						<option value="Vietnamese">Vietnamese</option>
+						<option value="Welsh">Welsh</option>
+						<option value="Xhosa">Xhosa</option>
+						<option value="Yiddish">Yiddish</option>
+						<option value="Yoruba">Yoruba</option>
+						<option value="Zulu">Zulu</option>
+					</select>
+				</div>
+
+				<br>
+
+				<textarea id="smsContent" name="smsContent" placeholder="Paste your SMS content here" required></textarea>
+
+				<button id="checkButton" class="btn btn-check" type="submit">Check</button>
+
+				<h5><center>Message Status</center></h5>
+
+				<input type="hidden" id="myVar" name="variable" value="{{result}}">
+
+				<div id="resultContainer"></div>
+
+				<script>
+					var myVar = document.getElementById("myVar").value;
+					var resultContainer = document.getElementById("resultContainer");
+					const msg = ["Wait a minute, this is a SPAM!", "Ohhh, this is a normal message."];
+					if (myVar == 0)
+					{
+						resultContainer.innerHTML = '<div class="alert alert-danger">'+msg[myVar]+'</div>';
+					}
+					else if (myVar == 1)
+					{
+						resultContainer.innerHTML = '<div class="alert alert-success">'+msg[myVar]+'</div>';
+					}
+				</script>
+
+			</div>
+		</form>
+	</body>
+</html>
